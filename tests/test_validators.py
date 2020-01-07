@@ -23,6 +23,3 @@ class TestPanda(unittest.TestCase):
         # both
         with self.assertRaises(ValueError):
             validator.range(2, 3)
-
-
-
