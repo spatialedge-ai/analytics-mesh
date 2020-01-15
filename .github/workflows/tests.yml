@@ -1,0 +1,53 @@
+name: mesh-tests
+
+on:
+  pull_request:
+    branches:
+      - 'master'
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      sftp:
+        image: sublimate/sftp-test:latest
+        ports: ["2222:22"]
+        environment:
+          ENV_PASSWORD: 'testztest'
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: setup main tests
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.6.x
+
+    - name: Install PostgreSQL 11 client
+      run: |
+        sudo apt-get -yqq install libpq-dev
+
+    - name: Build App
+      env:
+        PGHOST: localhost
+        PGUSER: postgres
+        RAILS_ENV: test
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+        bin/rails db:setup
+
+    - name: Run Tests
+      env:
+        PGHOST: localhost
+        PGUSER: postgres
+        RAILS_ENV: test
+      run: |
+      bundle exec rake test
+      bundle exec rake test:system
+      # or Rspec
+      # bundle exec rspec
