@@ -7,11 +7,7 @@ echo "$ENV_PASSWORD"
 echo -e "\n  Setting root password for ssh connection"
 echo "root:$ENV_PASSWORD"| chpasswd
 
-echo -e "  Modifying sshd_config to accept password authentication on ssh"
-sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config  
-
-echo "  Modifying sshd_config to allow root user password"
-sed -i 's/PermitRootLogin .*$/PermitRootLogin yes/g' /etc/ssh/sshd_config
+cp /app/sshd_config /etc/ssh/sshd_config
 
 echo " Setup the sftp folders"
 mkdir -p /var/sftp/uploads
