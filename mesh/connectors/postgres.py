@@ -10,12 +10,13 @@ class Postgres(Connector):
         super().__init__()
         self.conn = None
 
-    def connect(self, host, port, username, database):
-        self.conn = psycopg2.connect("host={host} dbname={database} user={username} port={port}".format(
+    def connect(self, host, port, username, database, password):
+        self.conn = psycopg2.connect("host={host} dbname={database} user={username} port={port} password={password}".format(
                 username=username,
                 host=host,
                 port=port,
-                database=database
+                database=database,
+                password=password
             ))
 
     @staticmethod
